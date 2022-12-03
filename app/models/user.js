@@ -3,9 +3,9 @@ const { default: mongoose} = require("mongoose");
 const schema= new mongoose.Schema({
     firstName:{type:String,},
     lastName:{type:String},
-    username:{type:String, required:true},
-    phone:{type:String, required: true},
-    email:{type:String},
+    username:{type:String, required:true,lowercase:true},
+    phone:{type:String,},
+    email:{type:String, required:true, lowercase:true},
     password:{type:String},
     otp:{type:Object, default:{
         code: 0,

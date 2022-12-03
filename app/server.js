@@ -1,10 +1,11 @@
 const express= require("express")
 const app = express()
-
+const createError=require("http-errors")
 const path = require("path")
 const http = require ("http")
 const { default: mongoose } = require("mongoose")
 const { allRoutes } = require("./routes/router")
+const morgan = require("morgan")
 
 module.exports=class application {
 
@@ -16,6 +17,7 @@ module.exports=class application {
         this.errorHandler()
     }
     configApplication(){
+    app.use(morgan("dev"))
     app.use(express.json())
     app.use(express. urlencoded({extended: true}))
     app.use(express.static(path.join(__dirname,"..","public")))
@@ -24,6 +26,13 @@ module.exports=class application {
         mongoose.connect(URL_DB,(error)=>{
             if(!error) return console.log("connected to db")
            return   console.log(error)
+        })
+        mongoose.connection.on("connected",()=>{
+            console.log("mongoose connected to db")
+        })
+        process.on("SIGINT",async()=>{
+            await mongoose.connection.close()
+            process.exit(0)
         })
     }
     createServer(PORT){
@@ -36,18 +45,18 @@ module.exports=class application {
     }
     errorHandler(){
         app.use((req,res,next)=>{
-            return res.json({
-                statusCode: 404 ,
-                success: false,
-                message: "آدرس مورد نظر یافت نشد"
-            })
+            next(createError.NotFound("صفحه ی مورد نظر یافت نشد"))
         })
         app.use((error,req, res, next)=>{
-            const statusCode=error.status|| 500
-            const message=error.message || "internalError"
+            const serverError=createError.InternalServerError
+            const statusCode=error.status|| serverError.status
+            const message=error.message || serverError.message
             return res.status(statusCode).json({
-                status:statusCode,
-                message
+                data: null,
+                 error:{
+                    statusCode,
+                    message
+                 }
             })
         })
     } 
