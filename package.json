@@ -1,0 +1,29 @@
+{
+  "dependencies": {
+    "auto-bind": "^4.0.0",
+    "bcrypt": "^5.1.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^6.7.5",
+    "nodemon": "^2.0.20"
+  },
+  "name": "shopstore",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amiof/shopstore.git"
+  },
+  "keywords": [],
+  "author": "",
+  "type": "commonjs",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amiof/shopstore/issues"
+  },
+  "homepage": "https://github.com/amiof/shopstore#readme",
+  "description": ""
+}
