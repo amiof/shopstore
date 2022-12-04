@@ -41,13 +41,13 @@ module.exports=class application {
                }
             },
             tags:[{name:"user", description: "the user routes and athu user routes"},{name:"admin",description: "the admin routes"}],
-            basePath: "http://localhost:5000",
+            // basePath: "http://localhost:5000",
             
         },
         servers:[{
             url:"http://localhost:5000"
         }],
-        apis:["./routes/*/*.js"],
+        apis:["./app/routes/*/*.js"],
         
     })))
 
