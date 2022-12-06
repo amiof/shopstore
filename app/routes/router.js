@@ -4,7 +4,7 @@ const { userAuthRoutes } = require("./users/auth.user")
 const router=require("express").Router()
 
 
-router.use("/",HomeRoutes)
+router.use("/", HomeRoutes)
 router.use("/usr",userAuthRoutes)
 
 

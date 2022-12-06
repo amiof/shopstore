@@ -9,7 +9,7 @@ const schema= new mongoose.Schema({
     password:{type:String},
     otp:{type:Object, default:{
         code: 0,
-        expire:0
+        expire:0,
     }},
     bill:{type:[],default:[]},
     discount: {type:Number, default:0},

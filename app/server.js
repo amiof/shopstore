@@ -8,7 +8,7 @@ const { allRoutes } = require("./routes/router")
 const morgan = require("morgan")
 const swaggerUi=require("swagger-ui-express")
 const swaggerJsdoc=require("swagger-jsdoc")
-
+const cors=require("cors")
 module.exports=class application {
 
     constructor(PORT,URL_DB){
@@ -19,6 +19,7 @@ module.exports=class application {
         this.errorHandler()
     }
     configApplication(){
+    app.use(cors())
     app.use(morgan("dev"))
     app.use(express.json())
     app.use(express. urlencoded({extended: true}))

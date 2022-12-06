@@ -35,14 +35,14 @@ async userSave(mobile, code){
    return(await this.updateUser(mobile,{otp:{
       
         code,
-        expire:new Date().getTime()+2400,
+        expire:new Date().getTime()+240000,
         
       
     }}))
   }
   return await (userModel.create({mobile, otp:{
     code,
-    expire: new Date().getTime()+24000,
+    expire: new Date().getTime()+240000,
    
   }} ))
 }
@@ -63,9 +63,12 @@ async updateUser(mobile,ObjectData={}){
         await checkOtpSchema.validateAsync(req.body)
         const {mobile , code}=req.body 
         const user=await userModel.findOne({mobile})
+        const date=new Date().getTime()
+        console.log(date-user.otp.expire)
+        console.log(user.otp.expire)
         if(!user) throw createHttpError.NotFound("کاربری یافت نشد")
         if(user.otp.code !=code ) throw createHttpError.Unauthorized("کد ارسال شده معتبر نمی باشد")
-        if (+user?.otp?.expire < new Date().getTime()) createHttpError.Unauthorized(" کد منقضی شده است")
+        if (+user.otp.expire < date ) throw  createHttpError.Unauthorized(" کد منقضی شده است")
         const createToken=await singAccessToken({mobile},"1d")
         res.status(201).json({
          status:201,
