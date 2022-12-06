@@ -8,8 +8,6 @@ const { allRoutes } = require("./routes/router")
 const morgan = require("morgan")
 const swaggerUi=require("swagger-ui-express")
 const swaggerJsdoc=require("swagger-jsdoc")
-const { verify } = require("crypto")
-const { version } = require("os")
 
 module.exports=class application {
 
@@ -47,7 +45,7 @@ module.exports=class application {
         servers:[{
             url:"http://localhost:5000"
         }],
-        apis:["./app/routes/*/*.js"],
+        apis:["./app/routes/*/*.js"]
         
     })))
 

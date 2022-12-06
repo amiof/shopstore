@@ -26,6 +26,30 @@ const router = require("express").Router();
  *                     description: Internal Server Error
  */
 router.post("/login", userAuthController.usrLogin);
+/**
+ * @swagger
+ *   /usr/login/checkLoginCode:
+ *      post:
+ *            tags: ["user"]
+ *            summary: login code check 
+ *            description: check login code send to mobile number 
+ *            parameters: 
+ *            -  name : loginCode
+ *               description : login Code send to user
+ *               in: formData
+ *               required: true
+ *               type: string 
+ *            responses: 
+ *                        201:
+ *                            description: success
+ *                        400:
+ *                            description : bad Request
+ *                        401: 
+ *                            description : unAuthorization
+ *                        500: 
+ *                            description : internal Error
+ */
+router.post("/login/checkLoginCode", userAuthController.checkLoginCode);
 
 module.exports = {
   userAuthRoutes: router,

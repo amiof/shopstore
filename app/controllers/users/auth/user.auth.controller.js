@@ -1,5 +1,5 @@
 const createHttpError = require("http-errors");
-const { object } = require("joi");
+const { object, date } = require("joi");
 const { userModel } = require("../../../models/user");
 const { randomCode } = require("../../../utils/functions");
 const { authSchema } = require("../../../validators/users/auth.user");
@@ -35,7 +35,7 @@ async userSave(mobile, code){
    return(await this.updateUser(mobile,{otp:{
       
         code,
-        expire: new Date().getTime()+24000,
+        expire:new Date().getTime()+2400,
         
       
     }}))
@@ -47,14 +47,29 @@ async userSave(mobile, code){
   }} ))
 }
 async checkUser(mobile){
-  const user= await userModel.findOne({mobile})
+  const user= await userModel.findOne({mobile}) 
+  
   return !!user
 }
 async updateUser(mobile,ObjectData={}){
 
- const updateResult= userModel.updateOne({mobile}, {$set:ObjectData})
- console.log(updateResult)
+ const updateResult= await userModel.updateOne({mobile}, {$set:ObjectData})
+ 
  return !!updateResult.modifiedCount
+}
+ async checkLoginCode(req,res,next){
+         const {mobile , code}=req.body 
+         const date=new Date().getTime()
+         const user=await userModel.findOne({mobile})
+         if (user?.otp?.expire < date) createHttpError.Unauthorized("این یوزر و جود ندارد یا کد منقضی شده است")
+         res.status(201).json({
+          status:201,
+          success: true,
+          message:"شما با موفقیت لاگین کردید",
+          mobile,
+          code,
+         })
+  
 }
 }
 
