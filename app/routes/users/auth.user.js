@@ -34,7 +34,12 @@ router.post("/login", userAuthController.usrLogin);
  *            summary: login code check 
  *            description: check login code send to mobile number 
  *            parameters: 
- *            -  name : loginCode
+ *            -  name : mobile
+ *               description : mobile number
+ *               in: formData
+ *               required: true
+ *               type: string 
+ *            -  name : code
  *               description : login Code send to user
  *               in: formData
  *               required: true

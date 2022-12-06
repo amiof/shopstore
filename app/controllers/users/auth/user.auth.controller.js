@@ -1,8 +1,8 @@
 const createHttpError = require("http-errors");
 const { object, date } = require("joi");
 const { userModel } = require("../../../models/user");
-const { randomCode } = require("../../../utils/functions");
-const { authSchema } = require("../../../validators/users/auth.user");
+const { randomCode, singAccessToken } = require("../../../utils/functions");
+const { authSchema, checkOtpSchema } = require("../../../validators/users/auth.user");
 const { controller } = require("../../controller");
 
 class userAuthController extends controller {
@@ -58,17 +58,27 @@ async updateUser(mobile,ObjectData={}){
  return !!updateResult.modifiedCount
 }
  async checkLoginCode(req,res,next){
-         const {mobile , code}=req.body 
-         const date=new Date().getTime()
-         const user=await userModel.findOne({mobile})
-         if (user?.otp?.expire < date) createHttpError.Unauthorized("این یوزر و جود ندارد یا کد منقضی شده است")
-         res.status(201).json({
-          status:201,
-          success: true,
-          message:"شما با موفقیت لاگین کردید",
-          mobile,
-          code,
-         })
+
+      try {
+        await checkOtpSchema.validateAsync(req.body)
+        const {mobile , code}=req.body 
+        const user=await userModel.findOne({mobile})
+        if(!user) throw createHttpError.NotFound("کاربری یافت نشد")
+        if(user.otp.code !=code ) throw createHttpError.Unauthorized("کد ارسال شده معتبر نمی باشد")
+        if (+user?.otp?.expire < new Date().getTime()) createHttpError.Unauthorized(" کد منقضی شده است")
+        const createToken=await singAccessToken({mobile},"1d")
+        res.status(201).json({
+         status:201,
+         success: true,
+         message:"شما با موفقیت لاگین کردید",
+         mobile,
+         code,
+         signToken :createToken
+        })
+      } catch (error) {
+        next(error)
+      }
+     
   
 }
 }
