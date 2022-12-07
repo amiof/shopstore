@@ -2,10 +2,15 @@ const {controller} = require("../controller");
 
 class homeController extends controller{
       indexPage(req,res,next){
-        res.json({
-            status:200,
-            message: "index is up"
-        })
+        try {
+          res.json({
+              status:200,
+              message: "index is up"
+          })
+          
+        } catch (error) {
+          next(error)
+        }
       }
 }
 module.exports={

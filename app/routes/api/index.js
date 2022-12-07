@@ -1,4 +1,5 @@
 const {homeController} = require("../../controllers/api/home.controller")
+const { verifyRefreshToken } = require("../../middleware/refreshToken")
 const { verifyAccessToken } = require("../../middleware/verifyAccessToken")
 
 const router= require("express").Router()
@@ -25,7 +26,7 @@ const router= require("express").Router()
  *                            description : internal Error
  */
  
-router.get("/",verifyAccessToken, homeController.indexPage) 
+router.get("/",verifyRefreshToken, homeController.indexPage) 
 
 
 module.exports={

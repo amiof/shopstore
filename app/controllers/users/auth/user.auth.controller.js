@@ -69,14 +69,16 @@ async updateUser(mobile,ObjectData={}){
         if(!user) throw createHttpError.NotFound("کاربری یافت نشد")
         if(user.otp.code !=code ) throw createHttpError.Unauthorized("کد ارسال شده معتبر نمی باشد")
         if (+user.otp.expire < date ) throw  createHttpError.Unauthorized(" کد منقضی شده است")
-        const createToken=await singAccessToken({mobile},"1d")
+        const createToken=await singAccessToken({mobile},"1m")
+        const createRefreshToken=await singAccessToken({mobile}, "1y")
         res.status(201).json({
          status:201,
          success: true,
          message:"شما با موفقیت لاگین کردید",
          mobile,
          code,
-         signToken :createToken
+         signToken :createToken,
+         refreshToken:createRefreshToken
         })
       } catch (error) {
         next(error)

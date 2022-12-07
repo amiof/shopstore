@@ -10,7 +10,9 @@ const headers= req?.headers
     
     if(token){
         JWT.verify(token,SECRET_KEY,async (error, deCode)=>{
-            if (error) return next (createHttpError.Unauthorized("وارد حساب کاربری خود شوید"))
+            if (error) {
+                req.accessTokenExpired=true
+                return next (createHttpError.Unauthorized("وارد حساب کاربری خود شوید"))}
             const {mobile}= deCode || {}
             
             const user= await userModel.findOne({mobile})
