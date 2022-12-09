@@ -2,6 +2,7 @@ const createHttpError = require("http-errors");
 const { object, date } = require("joi");
 const { userModel } = require("../../../models/user");
 const { randomCode, singAccessToken } = require("../../../utils/functions");
+const { redisClient } = require("../../../utils/init.redis");
 const { authSchema, checkOtpSchema } = require("../../../validators/users/auth.user");
 const { controller } = require("../../controller");
 
@@ -64,13 +65,16 @@ async updateUser(mobile,ObjectData={}){
         const {mobile , code}=req.body 
         const user=await userModel.findOne({mobile})
         const date=new Date().getTime()
-        console.log(date-user.otp.expire)
-        console.log(user.otp.expire)
+        // console.log(date-user.otp.expire)
+        // console.log(user.otp.expire)
         if(!user) throw createHttpError.NotFound("کاربری یافت نشد")
         if(user.otp.code !=code ) throw createHttpError.Unauthorized("کد ارسال شده معتبر نمی باشد")
         if (+user.otp.expire < date ) throw  createHttpError.Unauthorized(" کد منقضی شده است")
         const createToken=await singAccessToken({mobile},"1m")
         const createRefreshToken=await singAccessToken({mobile}, "1y")
+        const id=user._id.toString()
+        console.log(id)
+        await redisClient.SETEX(id,(356*24*60*60),createRefreshToken)
         res.status(201).json({
          status:201,
          success: true,

@@ -14,6 +14,7 @@ module.exports=class application {
     constructor(PORT,URL_DB){
         this.configApplication()
         this.connectMongoDB(URL_DB)
+        this.initRedis()
         this.createServer(PORT)
         this.createRoutes()
         this.errorHandler()
@@ -63,6 +64,9 @@ module.exports=class application {
             await mongoose.connection.close()
             process.exit(0)
         })
+    }
+    initRedis(){
+        require("./utils/init.redis")
     }
     createServer(PORT){
        http.createServer(app).listen(PORT,(error)=>{
